@@ -23,13 +23,20 @@ type (
 func parseOptions(args []string) options {
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	o := options{}
+	var help bool
 
 	fs.StringVar(&o.operation, "operation", "", "one of: encode|decode (Required)")
 	fs.IntVar(&o.shift, "shift", 0, "shift value to be used for Caesar cipher (Required)")
+	fs.BoolVar(&help, "help", false, "show help message")
 	fs.StringVar(&o.inputFilePath, "input", "", "path to input file, if not specified stdin will be used")
 	fs.StringVar(&o.outputFilePath, "output", "", "path to output file, if not specified stdout will be used")
 
 	_ = fs.Parse(args)
+
+	if help {
+		fs.PrintDefaults()
+		os.Exit(0)
+	}
 
 	if o.operation == "" {
 		panic("operation should be defined")
